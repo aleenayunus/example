@@ -36,11 +36,6 @@ Resources:
       TemplateURL: "https://poctemplatebucket007.s3.amazonaws.com/CloudFormation/fargate_template.yaml"
     Type: AWS::CloudFormation::Stack
 
-  KinesisStack:
-    Properties:
-      TemplateURL: "https://poctemplatebucket007.s3.amazonaws.com/CloudFormation/kinesis_template.yaml"
-    Type: AWS::CloudFormation::Stack
-
   SecurityGroupStack:
     Properties:
       Parameters:
