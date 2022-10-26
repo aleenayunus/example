@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  DBStack:
+    Properties:
+      Parameters:
+        DBSecurityGroup:
+          Fn::GetAtt:
+          - SecurityGroupStack
+          - Outputs.DBSG
+        PrivateSubnets:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.SubnetsPrivate
+      TemplateURL: "https://poctemplatebucket007.s3.amazonaws.com/CloudFormation/db_template.yaml"
+    Type: AWS::CloudFormation::Stack
+
+  FargateStack:
+    Properties:
+      Parameters:
+        DBParameters:
+          Fn::GetAtt:
+          - DBStack
+          - Outputs.CredStore
+        FargateSecurityGroup:
+          Fn::GetAtt:
+          - SecurityGroupStack
+          - Outputs.FargateSG
+        KinesisStream:
+          Fn::GetAtt:
+          - KinesisStack
+          - Outputs.Stream
+        PublicSubnets:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.SubnetsPublic
+      TemplateURL: "https://poctemplatebucket007.s3.amazonaws.com/CloudFormation/fargate_template.yaml"
+    Type: AWS::CloudFormation::Stack
+
+  KinesisStack:
+    Properties:
+      TemplateURL: "https://poctemplatebucket007.s3.amazonaws.com/CloudFormation/kinesis_template.yaml"
+    Type: AWS::CloudFormation::Stack
+
+  SecurityGroupStack:
+    Properties:
+      Parameters:
+        VPC:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.VPC
+      TemplateURL: "https://poctemplatebucket007.s3.amazonaws.com/CloudFormation/security_group_template.yaml"
+    Type: AWS::CloudFormation::Stack
+    
+  VPCStack:
+    Properties:
+      TemplateURL: "https://poctemplatebucket007.s3.amazonaws.com/CloudFormation/vpc_template.yaml"
+    Type: AWS::CloudFormation::Stack
